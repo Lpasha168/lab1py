@@ -1,7 +1,5 @@
 import os
 
-# ==================== Реализация функций по ТЗ ====================
-
 def convert_value(value: str) -> str | int | float:
     """Преобразует строку в int, float или оставляет str."""
     if not value or value.strip() == "":
@@ -9,18 +7,18 @@ def convert_value(value: str) -> str | int | float:
     
     val_clean = value.strip()
     
-    # Убираем кавычки, если они есть (актуально для 4-го файла)
+    #убираем кавычки
     if val_clean.startswith('"') and val_clean.endswith('"'):
         val_clean = val_clean[1:-1].strip()
     
     has_minus = val_clean.startswith("-")
     check_str = val_clean[1:] if has_minus else val_clean
 
-    # Проверка на int
+    #проверка на int
     if check_str.isdigit() and len(check_str) > 0:
         return int(val_clean)
         
-    # Проверка на float
+    #проверка на float
     if val_clean.count(".") == 1:
         str_without_dot = check_str.replace(".", "", 1)
         if str_without_dot.isdigit() and len(str_without_dot) > 0:
@@ -32,7 +30,7 @@ def convert_value(value: str) -> str | int | float:
 def read_table_file(filepath: str, delimiter: str = ',', has_header: bool = True) -> dict:
     """Читает таблицу и определяет типы данных по первой строке."""
     with open(filepath, 'r', encoding='utf-8') as f:
-        # Игнорируем пустые строки в файле
+        #игнорируем пустые строки в файле
         lines = [line.strip() for line in f if line.strip()]
 
     if not lines:
@@ -41,9 +39,9 @@ def read_table_file(filepath: str, delimiter: str = ',', has_header: bool = True
     start_data_idx = 0
     header_list = []
 
-    # 1. Обработка заголовка
+    # обработка заголовка
     if has_header:
-        # Для разделителя-пробела используем split() без аргументов, чтобы убрать лишние пробелы
+        
         if delimiter == ' ':
             header_list = [col.strip() for col in lines[0].split()]
         else:
@@ -53,7 +51,7 @@ def read_table_file(filepath: str, delimiter: str = ',', has_header: bool = True
     if start_data_idx >= len(lines):
         return {'header': header_list, 'data': [], 'types': []}
 
-    # Считываем сырые данные строк
+    #считываем сырые данные строк
     raw_data = []
     for line in lines[start_data_idx:]:
         if delimiter == ' ':
@@ -62,24 +60,22 @@ def read_table_file(filepath: str, delimiter: str = ',', has_header: bool = True
             row = [col.strip() for col in line.split(delimiter)]
         raw_data.append(row)
 
-    # 2. Анализируем первую строку данных для определения типов столбцов
+    #определение типов столбцов
     first_data_row = raw_data[0]
     column_types = []
     for val in first_data_row:
         converted = convert_value(val)
         column_types.append(type(converted).__name__)
 
-    # 3. Применяем преобразования ко всем строкам таблицы
+    #преобразования ко всем строкам таблицы
     final_data = []
     for row in raw_data:
         converted_row = []
         for idx, val in enumerate(row):
             if idx < len(column_types):
                 col_type = column_types[idx]
-                # Принудительно приводим к типу, который определили по первой строке
                 if col_type == 'int':
                     try:
-                        # Удаляем кавычки перед конвертацией, если они есть
                         clean_val = val.strip().strip('"')
                         converted_row.append(int(clean_val))
                     except ValueError:
@@ -91,7 +87,6 @@ def read_table_file(filepath: str, delimiter: str = ',', has_header: bool = True
                     except ValueError:
                         converted_row.append(val)
                 else:
-                    # Для str просто очищаем кавычки
                     converted_row.append(val.strip().strip('"'))
             else:
                 converted_row.append(convert_value(val))
@@ -104,7 +99,7 @@ def read_table_file(filepath: str, delimiter: str = ',', has_header: bool = True
     }
 
 
-# ==================== Создание файлов и запуск тестов ====================
+#исходные файлы
 
 files_content = {
     "file1.txt": (
@@ -140,15 +135,15 @@ files_content = {
     )
 }
 
-# Настройки для чтения каждого файла
+#чтение каждого файла
 file_settings = {
     "file1.txt": {"delimiter": ",", "has_header": True},
     "file2.txt": {"delimiter": " ", "has_header": True},
-    "file3.txt": {"delimiter": ";", "has_header": False}, # Нет заголовков
+    "file3.txt": {"delimiter": ";", "has_header": False}, 
     "file4.txt": {"delimiter": "|", "has_header": True}
 }
 
-# Запись, тестирование и удаление файлов
+#тестирование и удаление файлов
 for filename, content in files_content.items():
     with open(filename, "w", encoding="utf-8") as f:
         f.write(content)
@@ -162,10 +157,8 @@ for filename, content in files_content.items():
     print(f"Заголовки ('header'): {result['header']}")
     print("Данные ('data'):")
     for row in result['data']:
-        # Показываем не только значения, но и реальные типы данных внутри Python
         row_with_types = [f"{val} ({type(val).__name__})" for val in row]
         print(f"  {row_with_types}")
         
-    # Удаляем за собой файл
     if os.path.exists(filename):
         os.remove(filename)
