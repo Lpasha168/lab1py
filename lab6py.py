@@ -1,9 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# ==============================================================================
-# ИСХОДНЫЕ ДАННЫЕ ИЗ ТАБЛИЦЫ
-# ==============================================================================
+
+#исходные данные
 months = np.arange(1, 13)
 
 data = {
@@ -18,9 +17,8 @@ data = {
     "total_profit": [211000, 183300, 224700, 222700, 209600, 201400, 295500, 361400, 234000, 266700, 412800, 300200]
 }
 
-# ==============================================================================
-# ЗАДАНИЕ 1: Простой линейный график общей прибыли
-# ==============================================================================
+
+#1: простой линейный график общей прибыли
 plt.figure(figsize=(8, 5))
 plt.plot(data["month_number"], data["total_profit"])
 
@@ -31,9 +29,8 @@ plt.xticks(data["month_number"])
 plt.grid(True, alpha=0.3)
 plt.show()
 
-# ==============================================================================
-# ЗАДАНИЕ 2: Стилизованный линейный график количества проданных единиц
-# ==============================================================================
+
+#2: стилизованный линейный график количества проданных единиц
 plt.figure(figsize=(8, 5))
 plt.plot(
     data["month_number"], 
@@ -54,9 +51,9 @@ plt.legend(loc="lower right")
 plt.grid(True, alpha=0.3)
 plt.show()
 
-# ==============================================================================
-# ЗАДАНИЕ 3.1: Все продукты на одном графике
-# ==============================================================================
+
+#задание 3.1: все продукты на одном графике
+
 plt.figure(figsize=(10, 6))
 plt.plot(data["month_number"], data["facecream"], label="Face cream Sales Data", marker="o", linewidth=2)
 plt.plot(data["month_number"], data["facewash"], label="Face Wash Sales Data", marker="o", linewidth=2)
@@ -73,9 +70,8 @@ plt.legend(loc="upper left")
 plt.grid(True, alpha=0.3)
 plt.show()
 
-# ==============================================================================
-# ЗАДАНИЕ 3.2: Каждый продукт на отдельном графике (через plt.figure())
-# ==============================================================================
+
+#задание 3.2: каждый продукт на отдельном графике 
 products = {
     "Face cream": data["facecream"],
     "Face wash": data["facewash"],
@@ -87,7 +83,6 @@ products = {
 
 for name, values in products.items():
     plt.figure(figsize=(8, 3))
-    # Подбираем цвета как на примере в задании
     color = "black" if name == "Bathingsoap" else "red"
     plt.plot(data["month_number"], values, marker="o", color=color)
     plt.title(f"Sales data of a {name.lower()}")
@@ -97,9 +92,9 @@ for name, values in products.items():
     plt.grid(True, alpha=0.3)
     plt.show()
 
-# ==============================================================================
-# ЗАДАНИЕ 4: Точечный график (scatter plot) для зубной пасты со штриховой сеткой
-# ==============================================================================
+
+#задание 4: точечный график для зубной пасты со штриховой сеткой
+
 plt.figure(figsize=(8, 5))
 plt.scatter(data["month_number"], data["toothpaste"], label="Tooth paste Sales data", color="tab:blue")
 
@@ -129,12 +124,11 @@ plt.grid(True, linestyle="--", alpha=0.5)
 plt.legend(loc="upper left")
 plt.show()
 
-# ==============================================================================
-# ЗАДАНИЕ 6: Круговая диаграмма (pie chart) годовых продаж всех продуктов
-# ==============================================================================
+
+#задание 6: Круговая диаграмма  годовых продаж всех продуктов
 plt.figure(figsize=(8, 8))
 
-# Считаем сумму продаж за год для каждого продукта
+#сумма продаж за год для каждого продукта
 total_sales = [
     sum(data["facecream"]),
     sum(data["facewash"]),
@@ -146,7 +140,6 @@ total_sales = [
 
 labels = ["FaceCream", "FaceWash", "ToothPaste", "Bathing soap", "Shampoo", "Moisturizer"]
 
-# Отрисовка круговой диаграммы с отображением процентов (autopct)
 plt.pie(total_sales, labels=labels, autopct="%1.1f%%", startangle=15)
 
 plt.title("Sales data")
